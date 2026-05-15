@@ -26,7 +26,7 @@ export default async function HelloPage () {
         </Link>
         <h1 className='text-4xl font-semibold tracking-tight'>Hello World</h1>
         <p className='text-zinc-600'>
-          :) Teste end-to-end. Esta página chama{' '}
+          Teste end-to-end. Esta página chama{' '}
           <code className='rounded bg-zinc-200 px-1.5 py-0.5 text-sm'>GET /hello</code> da API de
           dois jeitos diferentes — se os dois funcionarem, o deploy está saudável.
         </p>
