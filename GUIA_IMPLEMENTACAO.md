@@ -4,6 +4,16 @@
 >
 > **Objetivo:** Documentar, de ponta a ponta, o fluxo desde a criação do repositório no GitHub até a publicação do sistema em produção no Coolify, incluindo permissões, SSL wildcard e validações.
 
+> ## ⚠ Regra inviolável — Desenvolvimento em ambiente de SIMULAÇÃO
+>
+> **Todo desenvolvimento, teste e validação prévia DEVE ocorrer em ambiente de simulação** — com **banco de dados de simulação** ou **API de simulação (mock)**.
+>
+> - **Nunca** aponte o sistema em desenvolvimento para o banco de dados de produção.
+> - **Nunca** consuma APIs internas do HAM em ambiente produtivo durante o desenvolvimento.
+> - **Nunca** use credenciais de produção em máquinas locais de desenvolvedores.
+>
+> O acesso ao banco/API de produção é configurado **exclusivamente pela TD** na Etapa 6 deste guia, **somente** após o sistema ter sido validado em simulação. Violar essa regra significa risco direto a dados de pacientes, registros financeiros e operação clínica. Detalhes na [Seção 3.3](#33-ambiente-de-simulação-para-desenvolvimento).
+
 ---
 
 ## Sumário
@@ -11,6 +21,7 @@
 1. [Visão geral do fluxo](#1-visão-geral-do-fluxo)
 2. [Atores e responsabilidades](#2-atores-e-responsabilidades)
 3. [Pré-requisitos](#3-pré-requisitos)
+   - [3.3. Ambiente de simulação para desenvolvimento](#33-ambiente-de-simulação-para-desenvolvimento)
 4. [Etapa 1 — Gestor: Preparar o repositório GitHub](#4-etapa-1--gestor-preparar-o-repositório-github)
 5. [Etapa 2 — Gestor: Adicionar membros da equipe](#5-etapa-2--gestor-adicionar-membros-da-equipe)
 6. [Etapa 3 — Gestor: Conectar repositório local ao GitHub](#6-etapa-3--gestor-conectar-repositório-local-ao-github)
@@ -92,6 +103,50 @@
 - [ ] Acesso ao painel DNS da Cloudflare para a zona `s.apps-ia.ham.org.br`
 - [ ] Cloudflare API Token configurado no proxy Coolify (DNS-01 challenge)
 - [ ] Conhecimento básico de Docker e variáveis de ambiente
+
+### 3.3. Ambiente de simulação para desenvolvimento
+
+> **Regra inviolável.** Esta seção formaliza a regra destacada no topo do guia.
+
+Todo desenvolvimento do sistema **deve** ser conduzido contra um **ambiente isolado de simulação**, jamais contra o ambiente produtivo. Isso vale para o gestor, desenvolvedores internos, fornecedores terceirizados e estagiários.
+
+#### O que conta como ambiente de simulação
+
+Pelo menos **uma** das opções abaixo, dependendo da natureza do sistema:
+
+| Recurso | Opção de simulação aceita |
+|---|---|
+| **Banco de dados** | Instância separada (Postgres/MySQL/etc.) com **dados anonimizados** ou **dados sintéticos** gerados via seed. Pode rodar localmente em Docker ou em servidor de simulação fornecido pela TD. |
+| **APIs internas do HAM** (HIS, ERP, integrações) | Mock local (ex.: Mirage, MSW, json-server, WireMock) reproduzindo os contratos de resposta. |
+| **APIs de terceiros pagas/sensíveis** (gateway de pagamento, e-mail transacional, SMS) | Ambiente sandbox oficial do provedor ou stub local. |
+| **Armazenamento de arquivos** | Bucket S3/MinIO de simulação ou diretório local. |
+| **Filas e mensageria** | Instância separada (RabbitMQ/Redis) ou broker local. |
+
+#### O que **não** é aceitável durante o desenvolvimento
+
+- Apontar `DATABASE_URL` local para o banco de produção, ainda que "só para conferir um detalhe".
+- Usar tokens reais de APIs internas do HAM em `.env` local.
+- Copiar dumps de produção para a máquina do desenvolvedor sem anonimização.
+- Reutilizar credenciais de usuário real (CPF, prontuário, login) em testes.
+
+#### Como o boilerplate suporta esta regra
+
+- Cada aplicação possui `.env.example` documentando as variáveis necessárias com valores **fictícios**.
+- O `.env` real **nunca** é commitado (já está em `.gitignore`).
+- O `docker-compose.yml` na raiz sobe um banco local de simulação para uso em desenvolvimento (quando aplicável ao projeto).
+- Se o sistema integra com APIs internas do HAM, o time deve criar uma camada de mock (ex.: `apps/api/src/integrations/__mocks__/`) usada por padrão fora de produção.
+
+#### Responsabilidade de cada ator
+
+| Ator | Responsabilidade |
+|---|---|
+| **Gestor / desenvolvedores** | Garantir que todo o desenvolvimento e validação prévia ocorre em simulação. Documentar no `README.md` do projeto como o ambiente de simulação é provisionado (comandos para subir banco local, seed inicial, etc.). |
+| **Time TD** | Verificar, antes de aceitar o ticket de deploy (Etapa 5.1), se o repositório contém evidência de uso de simulação: presença de `.env.example`, scripts de seed, configuração de mock. Recusar o deploy caso encontre credenciais produtivas no repositório. |
+| **Tech lead do setor** | Revisar pull requests garantindo que nenhuma chamada direta a sistema produtivo foi introduzida. |
+
+#### Transição de simulação para produção
+
+A configuração das credenciais produtivas (banco real, APIs reais, tokens de integração) é feita **apenas no Coolify** pela TD, na [Etapa 6.5](#95-configurar-variáveis-de-ambiente). O código da aplicação **não muda** entre simulação e produção — somente as variáveis de ambiente. Esse é o motivo de o boilerplate exigir que todo acesso a recursos externos seja parametrizado via env vars.
 
 ---
 
@@ -265,8 +320,12 @@ Antes de tocar no Coolify, abra o repositório no GitHub e confirme:
 - [ ] Existe `.env.example` (sem valores sensíveis)
 - [ ] **Não existe** `.env` commitado (busque por arquivos `.env*` na raiz)
 - [ ] O time `@td-core` tem acesso Admin ao repositório
+- [ ] **Evidência de uso de ambiente de simulação:** o `README.md` do projeto descreve como subir banco/API de simulação (ex.: `docker-compose up db`, scripts de seed em `apps/api/prisma/seed.ts`, mocks em `__mocks__/`)
+- [ ] **Nenhuma credencial produtiva** está hardcoded no código ou em arquivos versionados (procure por strings suspeitas: `prod`, `producao`, IPs internos do HAM, nomes de servidores reais, tokens completos)
 
 Se algum item falhar, **devolva o ticket ao gestor** com a lista de pendências. Não prossiga.
+
+> ⚠ **Encontrou credencial produtiva no repositório?** Pare imediatamente. Notifique o gestor e o time de segurança, inicie processo de rotação da credencial vazada, e exija que o histórico do Git seja limpo antes de retomar o deploy.
 
 ### 9.2. Criar o projeto e environment
 
@@ -608,6 +667,16 @@ API:
 ### Restrições de acesso
 - Rede: [Interna HAM / VPN / Pública]
 - Restrição por IP: [Sim, listar / Não]
+
+### Validação em ambiente de simulação
+Declaro que todo o desenvolvimento e validação prévia deste sistema
+ocorreu em ambiente de simulação (banco/API de simulação), conforme
+Seção 3.3 do Guia de Implementação. Nenhum desenvolvedor utilizou
+credenciais produtivas em máquina local.
+
+- Como o banco/API de simulação foi provisionado: <ex.: docker-compose up db + seed via pnpm db:seed>
+- Tipo de dados utilizados em simulação: [ ] sintéticos / [ ] produção anonimizados / [ ] sandbox do provedor
+- Responsável pela validação funcional em simulação: <Nome — data da última validação>
 
 ### Observações
 <Qualquer particularidade do sistema: integrações, horários críticos, dependências externas, prazo de publicação, etc.>
