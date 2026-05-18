@@ -21,7 +21,7 @@
 1. [Visão geral do fluxo](#1-visão-geral-do-fluxo)
 2. [Atores e responsabilidades](#2-atores-e-responsabilidades)
 3. [Pré-requisitos](#3-pré-requisitos)
-   - [3.3. Ambiente de simulação para desenvolvimento](#33-ambiente-de-simulação-para-desenvolvimento)
+  - [3.3. Ambiente de simulação para desenvolvimento](#33-ambiente-de-simulação-para-desenvolvimento)
 4. [Etapa 1 — Gestor: Preparar o repositório GitHub](#4-etapa-1--gestor-preparar-o-repositório-github)
 5. [Etapa 2 — Gestor: Adicionar membros da equipe](#5-etapa-2--gestor-adicionar-membros-da-equipe)
 6. [Etapa 3 — Gestor: Conectar repositório local ao GitHub](#6-etapa-3--gestor-conectar-repositório-local-ao-github)
@@ -68,6 +68,7 @@
 ```
 
 **Tempo estimado:**
+
 - Etapas do gestor (1–4): ~30 minutos
 - Etapas da TD (5–10): ~20 minutos
 - Validação (11): ~10 minutos
@@ -76,10 +77,12 @@
 
 ## 2. Atores e responsabilidades
 
-| Ator | Responsabilidades |
-|---|---|
-| **Gestor do setor** (ou desenvolvedor designado) | Criar e popular o repositório no GitHub, gerenciar membros, abrir ticket para a TD, validar o sistema após publicação. |
-| **Time de Transformação Digital (TD)** | Receber a solicitação, criar e configurar o projeto no Coolify, configurar acesso ao ambiente de produção, garantir SSL, monitoramento e backup. |
+
+| Ator                                             | Responsabilidades                                                                                                                                |
+| ------------------------------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Gestor do setor** (ou desenvolvedor designado) | Criar e popular o repositório no GitHub, gerenciar membros, abrir ticket para a TD, validar o sistema após publicação.                           |
+| **Time de Transformação Digital (TD)**           | Receber a solicitação, criar e configurar o projeto no Coolify, configurar acesso ao ambiente de produção, garantir SSL, monitoramento e backup. |
+
 
 > **Importante:** o gestor **não tem acesso direto** ao Coolify. Toda configuração de infraestrutura passa pela TD. Isso garante padronização, segurança e auditabilidade.
 
@@ -89,20 +92,20 @@
 
 ### Para o gestor
 
-- [ ] Conta no GitHub vinculada ao e-mail institucional `@ham.org.br`
-- [ ] Membro da organização `Hospital-Adventista-de-Manaus` no GitHub (se não for, solicitar à TD)
-- [ ] Node.js 20+ e `pnpm@9` instalados localmente
-- [ ] Git instalado e autenticado (SSH key ou HTTPS via PAT)
-- [ ] Cópia local do projeto baseada no boilerplate `ham-boilerplate-ia`
-- [ ] Sistema rodando localmente sem erros (`pnpm dev` funciona)
+- Conta no GitHub vinculada ao e-mail institucional `@ham.org.br`
+- Membro da organização `Hospital-Adventista-de-Manaus` no GitHub (se não for, solicitar à TD)
+- Node.js 20+ e `pnpm@9` instalados localmente
+- Git instalado e autenticado (SSH key ou HTTPS via PAT)
+- Cópia local do projeto baseada no boilerplate `ham-boilerplate-ia`
+- Sistema rodando localmente sem erros (`pnpm dev` funciona)
 
 ### Para o time TD
 
-- [ ] Acesso administrativo ao Coolify (`https://apps-ia.ham.org.br`)
-- [ ] Acesso administrativo à organização GitHub `Hospital-Adventista-de-Manaus`
-- [ ] Acesso ao painel DNS da Cloudflare para a zona `s.apps-ia.ham.org.br`
-- [ ] Cloudflare API Token configurado no proxy Coolify (DNS-01 challenge)
-- [ ] Conhecimento básico de Docker e variáveis de ambiente
+- Acesso administrativo ao Coolify (`https://apps-ia.ham.org.br`)
+- Acesso administrativo à organização GitHub `Hospital-Adventista-de-Manaus`
+- Acesso ao painel DNS da Cloudflare para a zona `s.apps-ia.ham.org.br`
+- Cloudflare API Token configurado no proxy Coolify (DNS-01 challenge)
+- Conhecimento básico de Docker e variáveis de ambiente
 
 ### 3.3. Ambiente de simulação para desenvolvimento
 
@@ -114,13 +117,15 @@ Todo desenvolvimento do sistema **deve** ser conduzido contra um **ambiente isol
 
 Pelo menos **uma** das opções abaixo, dependendo da natureza do sistema:
 
-| Recurso | Opção de simulação aceita |
-|---|---|
-| **Banco de dados** | Instância separada (Postgres/MySQL/etc.) com **dados anonimizados** ou **dados sintéticos** gerados via seed. Pode rodar localmente em Docker ou em servidor de simulação fornecido pela TD. |
-| **APIs internas do HAM** (HIS, ERP, integrações) | Mock local (ex.: Mirage, MSW, json-server, WireMock) reproduzindo os contratos de resposta. |
-| **APIs de terceiros pagas/sensíveis** (gateway de pagamento, e-mail transacional, SMS) | Ambiente sandbox oficial do provedor ou stub local. |
-| **Armazenamento de arquivos** | Bucket S3/MinIO de simulação ou diretório local. |
-| **Filas e mensageria** | Instância separada (RabbitMQ/Redis) ou broker local. |
+
+| Recurso                                                                                | Opção de simulação aceita                                                                                                                                                                    |
+| -------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Banco de dados**                                                                     | Instância separada (Postgres/MySQL/etc.) com **dados anonimizados** ou **dados sintéticos** gerados via seed. Pode rodar localmente em Docker ou em servidor de simulação fornecido pela TD. |
+| **APIs internas do HAM** (HIS, ERP, integrações)                                       | Mock local (ex.: Mirage, MSW, json-server, WireMock) reproduzindo os contratos de resposta.                                                                                                  |
+| **APIs de terceiros pagas/sensíveis** (gateway de pagamento, e-mail transacional, SMS) | Ambiente sandbox oficial do provedor ou stub local.                                                                                                                                          |
+| **Armazenamento de arquivos**                                                          | Bucket S3/MinIO de simulação ou diretório local.                                                                                                                                             |
+| **Filas e mensageria**                                                                 | Instância separada (RabbitMQ/Redis) ou broker local.                                                                                                                                         |
+
 
 #### O que **não** é aceitável durante o desenvolvimento
 
@@ -138,11 +143,13 @@ Pelo menos **uma** das opções abaixo, dependendo da natureza do sistema:
 
 #### Responsabilidade de cada ator
 
-| Ator | Responsabilidade |
-|---|---|
-| **Gestor / desenvolvedores** | Garantir que todo o desenvolvimento e validação prévia ocorre em simulação. Documentar no `README.md` do projeto como o ambiente de simulação é provisionado (comandos para subir banco local, seed inicial, etc.). |
-| **Time TD** | Verificar, antes de aceitar o ticket de deploy (Etapa 5.1), se o repositório contém evidência de uso de simulação: presença de `.env.example`, scripts de seed, configuração de mock. Recusar o deploy caso encontre credenciais produtivas no repositório. |
-| **Tech lead do setor** | Revisar pull requests garantindo que nenhuma chamada direta a sistema produtivo foi introduzida. |
+
+| Ator                         | Responsabilidade                                                                                                                                                                                                                                            |
+| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Gestor / desenvolvedores** | Garantir que todo o desenvolvimento e validação prévia ocorre em simulação. Documentar no `README.md` do projeto como o ambiente de simulação é provisionado (comandos para subir banco local, seed inicial, etc.).                                         |
+| **Time TD**                  | Verificar, antes de aceitar o ticket de deploy (Etapa 5.1), se o repositório contém evidência de uso de simulação: presença de `.env.example`, scripts de seed, configuração de mock. Recusar o deploy caso encontre credenciais produtivas no repositório. |
+| **Tech lead do setor**       | Revisar pull requests garantindo que nenhuma chamada direta a sistema produtivo foi introduzida.                                                                                                                                                            |
+
 
 #### Transição de simulação para produção
 
@@ -157,13 +164,13 @@ A configuração das credenciais produtivas (banco real, APIs reais, tokens de i
 1. Acesse `https://github.com/Hospital-Adventista-de-Manaus/ham-boilerplate-ia`
 2. Clique em **Use this template** → **Create a new repository**
 3. Configure:
-   - **Owner:** `Hospital-Adventista-de-Manaus`
-   - **Repository name:** padrão `ham-<setor>-<sistema>`, exemplos:
-     - `ham-rh-onboarding`
-     - `ham-cirurgia-protocolos`
-     - `ham-financeiro-cobranca`
-   - **Description:** breve, em português, ex.: *"Sistema de onboarding de novos colaboradores do RH"*
-   - **Privacy:** **Private** (sempre)
+  - **Owner:** `Hospital-Adventista-de-Manaus`
+  - **Repository name:** padrão `ham-<setor>-<sistema>`, exemplos:
+    - `ham-rh-onboarding`
+    - `ham-cirurgia-protocolos`
+    - `ham-financeiro-cobranca`
+  - **Description:** breve, em português, ex.: *"Sistema de onboarding de novos colaboradores do RH"*
+  - **Privacy:** **Private** (sempre)
 4. Clique em **Create repository from template**
 
 > **Padrão de nomenclatura:** sempre `ham-<setor>-<sistema>`, tudo em minúsculas, separado por hífens. Evite acrônimos pouco conhecidos. Esse nome será visível na URL pública e em todo o ciclo de vida do sistema.
@@ -173,16 +180,14 @@ A configuração das credenciais produtivas (banco real, APIs reais, tokens de i
 Após a criação, ainda no GitHub:
 
 1. Em **Settings → General**:
-   - Marque **Require contributors to sign off on web-based commits**
-   - Em **Pull Requests**, desmarque **Allow merge commits** (mantém histórico linear)
-   - Marque **Automatically delete head branches** (limpa branches após merge)
-
+  - Marque **Require contributors to sign off on web-based commits**
+  - Em **Pull Requests**, desmarque **Allow merge commits** (mantém histórico linear)
+  - Marque **Automatically delete head branches** (limpa branches após merge)
 2. Em **Settings → Branches**:
-   - Adicione regra para `master` (ou `main`):
-     - Require pull request reviews before merging (mínimo 1 aprovador)
-     - Require status checks to pass before merging
-     - Include administrators
-
+  - Adicione regra para `master` (ou `main`):
+    - Require pull request reviews before merging (mínimo 1 aprovador)
+    - Require status checks to pass before merging
+    - Include administrators
 3. Em **Settings → Secrets and variables → Actions**: não adicione nada agora. Variáveis de produção ficam no Coolify, não no GitHub.
 
 ---
@@ -194,15 +199,17 @@ Após a criação, ainda no GitHub:
 3. Adicione cada membro do setor pelo usuário GitHub
 4. Defina o papel:
 
-| Papel | Quando usar |
-|---|---|
-| **Read** | Stakeholder que só quer acompanhar (gestor de área, auditor) |
-| **Triage** | QA, analistas de teste |
-| **Write** | Desenvolvedores que vão commitar código |
-| **Maintain** | Tech leads do setor |
-| **Admin** | Apenas o gestor responsável pelo sistema |
 
-5. **Sempre adicione** o time `@Hospital-Adventista-de-Manaus/td-core` como **Admin** — a TD precisa ter acesso para emergências de produção.
+| Papel        | Quando usar                                                  |
+| ------------ | ------------------------------------------------------------ |
+| **Read**     | Stakeholder que só quer acompanhar (gestor de área, auditor) |
+| **Triage**   | QA, analistas de teste                                       |
+| **Write**    | Desenvolvedores que vão commitar código                      |
+| **Maintain** | Tech leads do setor                                          |
+| **Admin**    | Apenas o gestor responsável pelo sistema                     |
+
+
+1. **Sempre adicione** o time `@Hospital-Adventista-de-Manaus/td-core` como **Admin** — a TD precisa ter acesso para emergências de produção.
 
 ---
 
@@ -237,14 +244,16 @@ Deve exibir as duas linhas `origin ... (fetch)` e `origin ... (push)` apontando 
 
 Antes de subir, garanta que estes arquivos **existem e estão corretos**:
 
-| Arquivo | Por que importa |
-|---|---|
-| `pnpm-lock.yaml` | O Docker build no Coolify falha sem ele. Rode `pnpm install` se não existir. |
+
+| Arquivo                    | Por que importa                                                                      |
+| -------------------------- | ------------------------------------------------------------------------------------ |
+| `pnpm-lock.yaml`           | O Docker build no Coolify falha sem ele. Rode `pnpm install` se não existir.         |
 | `apps/web/public/.gitkeep` | Diretório `public/` precisa existir mesmo vazio (Docker faz `COPY apps/web/public`). |
-| `apps/api/Dockerfile` | Sem ele o Coolify não sabe construir a API. |
-| `apps/web/Dockerfile` | Sem ele o Coolify não sabe construir o frontend. |
-| `.gitignore` | Deve conter `.env`, `node_modules/`, `.next/`. **Nunca commite segredos.** |
-| `.env.example` | Documenta as variáveis necessárias. Deve estar versionado. |
+| `apps/api/Dockerfile`      | Sem ele o Coolify não sabe construir a API.                                          |
+| `apps/web/Dockerfile`      | Sem ele o Coolify não sabe construir o frontend.                                     |
+| `.gitignore`               | Deve conter `.env`, `node_modules/`, `.next/`. **Nunca commite segredos.**           |
+| `.env.example`             | Documenta as variáveis necessárias. Deve estar versionado.                           |
+
 
 Comando para conferir tudo de uma vez:
 
@@ -283,6 +292,7 @@ git push -u origin master
 ### 7.4. Confirmar no GitHub
 
 Acesse o repositório no navegador e verifique que:
+
 - O código apareceu
 - O `README.md` mostra a estrutura esperada
 - A branch `master` está ativa
@@ -314,14 +324,14 @@ Informações obrigatórias:
 
 Antes de tocar no Coolify, abra o repositório no GitHub e confirme:
 
-- [ ] Existe `pnpm-lock.yaml` na raiz
-- [ ] Existe `apps/web/Dockerfile` e `apps/api/Dockerfile`
-- [ ] Existe `apps/web/public/` (mesmo vazio com `.gitkeep`)
-- [ ] Existe `.env.example` (sem valores sensíveis)
-- [ ] **Não existe** `.env` commitado (busque por arquivos `.env*` na raiz)
-- [ ] O time `@td-core` tem acesso Admin ao repositório
-- [ ] **Evidência de uso de ambiente de simulação:** o `README.md` do projeto descreve como subir banco/API de simulação (ex.: `docker-compose up db`, scripts de seed em `apps/api/prisma/seed.ts`, mocks em `__mocks__/`)
-- [ ] **Nenhuma credencial produtiva** está hardcoded no código ou em arquivos versionados (procure por strings suspeitas: `prod`, `producao`, IPs internos do HAM, nomes de servidores reais, tokens completos)
+- Existe `pnpm-lock.yaml` na raiz
+- Existe `apps/web/Dockerfile` e `apps/api/Dockerfile`
+- Existe `apps/web/public/` (mesmo vazio com `.gitkeep`)
+- Existe `.env.example` (sem valores sensíveis)
+- **Não existe** `.env` commitado (busque por arquivos `.env*` na raiz)
+- O time `@td-core` tem acesso Admin ao repositório
+- **Evidência de uso de ambiente de simulação:** o `README.md` do projeto descreve como subir banco/API de simulação (ex.: `docker-compose up db`, scripts de seed em `apps/api/prisma/seed.ts`, mocks em `__mocks__/`)
+- **Nenhuma credencial produtiva** está hardcoded no código ou em arquivos versionados (procure por strings suspeitas: `prod`, `producao`, IPs internos do HAM, nomes de servidores reais, tokens completos)
 
 Se algum item falhar, **devolva o ticket ao gestor** com a lista de pendências. Não prossiga.
 
@@ -332,12 +342,12 @@ Se algum item falhar, **devolva o ticket ao gestor** com a lista de pendências.
 1. Acesse o Coolify em `https://apps-ia.ham.org.br`
 2. Em **Projects** → **+ Add**
 3. Configure:
-   - **Name:** mesmo nome do repositório (ex.: `ham-rh-onboarding`)
-   - **Description:** mesma descrição do GitHub
+  - **Name:** mesmo nome do repositório (ex.: `ham-rh-onboarding`)
+  - **Description:** mesma descrição do GitHub
 4. Dentro do projeto criado, clique em **+ Add a new environment**
 5. Configure:
-   - **Name:** `production`
-   - **Description:** *"Ambiente produtivo do sistema"*
+  - **Name:** `production`
+  - **Description:** *"Ambiente produtivo do sistema"*
 
 ### 9.3. Criar a aplicação web
 
@@ -351,9 +361,9 @@ Se algum item falhar, **devolva o ticket ao gestor** com a lista de pendências.
 
 Na tela de configuração detalhada:
 
-8. **Dockerfile Location:** `/apps/web/Dockerfile`
-9. **Port:** `3000` (porta interna do container Next.js)
-10. **Domains:** preencha o subdomínio completo, ex.: `https://onboarding.s.apps-ia.ham.org.br`
+1. **Dockerfile Location:** `/apps/web/Dockerfile`
+2. **Port:** `3000` (porta interna do container Next.js)
+3. **Domains:** preencha o subdomínio completo, ex.: `https://onboarding.s.apps-ia.ham.org.br`
 
 > ⚠️ **Atenção:** o **Base Directory** sempre é `/` (a raiz do repo). O Dockerfile precisa enxergar o monorepo inteiro como contexto de build — incluindo `pnpm-workspace.yaml` e `packages/`. Apontar Base Directory para `/apps/web` quebra o build.
 
@@ -374,17 +384,23 @@ Para cada aplicação (web e api), em **Configuration → Environment Variables*
 Variáveis padrão por aplicação:
 
 **Web:**
-| Variável | Valor | Build? |
-|---|---|---|
-| `NODE_ENV` | `production` | Não |
+
+
+| Variável              | Valor                                    | Build?  |
+| --------------------- | ---------------------------------------- | ------- |
+| `NODE_ENV`            | `production`                             | Não     |
 | `NEXT_PUBLIC_API_URL` | `https://<app>-api.s.apps-ia.ham.org.br` | **Sim** |
 
+
 **API:**
-| Variável | Valor | Build? |
-|---|---|---|
-| `NODE_ENV` | `production` | Não |
-| `PORT` | `3001` | Não |
-| `CORS_ORIGINS` | `https://<app>.s.apps-ia.ham.org.br` | Não |
+
+
+| Variável       | Valor                                | Build? |
+| -------------- | ------------------------------------ | ------ |
+| `NODE_ENV`     | `production`                         | Não    |
+| `PORT`         | `3001`                               | Não    |
+| `CORS_ORIGINS` | `https://<app>.s.apps-ia.ham.org.br` | Não    |
+
 
 > ⚠️ Variáveis sensíveis (senhas, tokens, API keys) **só** são adicionadas pelo time TD, **nunca** ficam no repositório. O gestor lista os nomes no ticket; o valor é coletado pela TD em canal seguro.
 
@@ -437,14 +453,12 @@ Em **cada aplicação** criada (web e api):
 1. Vá para **Configuration → Labels (Container Labels)**
 2. Desmarque **Readonly labels** (rodapé)
 3. Edite a linha que contém `tls.certresolver=letsencrypt`:
-   - Troque para `tls.certresolver=letsencrypt-dns`
+  - Troque para `tls.certresolver=letsencrypt-dns`
 4. Adicione duas linhas (substitua `<nome-do-router>` pelo router gerado automaticamente — você verá o prefixo nas linhas existentes, algo como `https-0-xyz123`):
-
-   ```
+  ```
    traefik.http.routers.<nome-do-router>.tls.domains[0].main=s.apps-ia.ham.org.br
    traefik.http.routers.<nome-do-router>.tls.domains[0].sans=*.s.apps-ia.ham.org.br
-   ```
-
+  ```
 5. Clique em **Save** e em seguida em **Redeploy**.
 
 ### 10.3. Validar a emissão do certificado
@@ -465,6 +479,7 @@ echo | openssl s_client -servername onboarding.s.apps-ia.ham.org.br \
 ```
 
 Deve retornar:
+
 - `subject=CN=*.s.apps-ia.ham.org.br` (ou similar)
 - `issuer=...Let's Encrypt...`
 - Datas de validade dentro de 90 dias
@@ -480,19 +495,21 @@ Deve retornar:
 3. Adicione o e-mail do gestor (deve ser `@ham.org.br`)
 4. Defina o papel:
 
-| Papel Coolify | Permissões | Indicado para |
-|---|---|---|
-| **Owner** | Tudo, inclusive deletar projeto | Apenas TD |
-| **Admin** | Gerenciar projeto, deploy, ver logs, editar env | Apenas TD |
-| **Member** | Ver projeto, ver logs, redeploy | Gestor do sistema |
-| **Viewer** | Apenas leitura | Stakeholders |
+
+| Papel Coolify | Permissões                                      | Indicado para     |
+| ------------- | ----------------------------------------------- | ----------------- |
+| **Owner**     | Tudo, inclusive deletar projeto                 | Apenas TD         |
+| **Admin**     | Gerenciar projeto, deploy, ver logs, editar env | Apenas TD         |
+| **Member**    | Ver projeto, ver logs, redeploy                 | Gestor do sistema |
+| **Viewer**    | Apenas leitura                                  | Stakeholders      |
+
 
 > **Regra:** o gestor recebe **Member** — pode redeployar e ver logs, mas não pode alterar variáveis de ambiente ou infraestrutura sem passar pela TD.
 
-5. Comunique o gestor (e-mail ou chat) com:
-   - URLs públicas (web e api)
-   - URL do Coolify para acompanhar deploys
-   - Documentação rápida de como redeployar (Etapa 12.3 abaixo)
+1. Comunique o gestor (e-mail ou chat) com:
+  - URLs públicas (web e api)
+  - URL do Coolify para acompanhar deploys
+  - Documentação rápida de como redeployar (Etapa 12.3 abaixo)
 
 ---
 
@@ -500,21 +517,21 @@ Deve retornar:
 
 ### 12.1. Checklist da TD (antes de fechar o ticket)
 
-- [ ] Aplicação web responde em `https://<app>.s.apps-ia.ham.org.br` com **200 OK**
-- [ ] Aplicação api responde em `https://<app>-api.s.apps-ia.ham.org.br/health` com **200 OK**
-- [ ] Certificado SSL válido (não auto-assinado, não expirado, emissor Let's Encrypt)
-- [ ] Health checks no Coolify estão verdes
-- [ ] Logs não mostram erros recorrentes (verificar últimos 5 minutos)
-- [ ] Gestor recebeu acesso ao Coolify
-- [ ] Ticket atualizado com URLs e credenciais (em canal seguro)
+- Aplicação web responde em `https://<app>.s.apps-ia.ham.org.br` com **200 OK**
+- Aplicação api responde em `https://<app>-api.s.apps-ia.ham.org.br/health` com **200 OK**
+- Certificado SSL válido (não auto-assinado, não expirado, emissor Let's Encrypt)
+- Health checks no Coolify estão verdes
+- Logs não mostram erros recorrentes (verificar últimos 5 minutos)
+- Gestor recebeu acesso ao Coolify
+- Ticket atualizado com URLs e credenciais (em canal seguro)
 
 ### 12.2. Checklist do gestor (validação funcional)
 
-- [ ] Consegue acessar a aplicação web pelo navegador (sem aviso de cert inválido)
-- [ ] Consegue fazer login (se aplicável)
-- [ ] Funcionalidade principal do sistema funciona
-- [ ] Recebeu convite do Coolify e consegue acessar logs
-- [ ] Documentou o link interno (wiki/intranet do setor)
+- Consegue acessar a aplicação web pelo navegador (sem aviso de cert inválido)
+- Consegue fazer login (se aplicável)
+- Funcionalidade principal do sistema funciona
+- Recebeu convite do Coolify e consegue acessar logs
+- Documentou o link interno (wiki/intranet do setor)
 
 ### 12.3. Como o gestor redeploya após mudanças no código
 
@@ -523,6 +540,7 @@ Deve retornar:
 3. Acompanha em `https://apps-ia.ham.org.br` → projeto → aplicação → **Deployments**
 
 Se o webhook não disparar:
+
 1. Acessa a aplicação no Coolify
 2. Clica no botão **Deploy** (canto superior direito)
 3. Acompanha o log
@@ -562,6 +580,7 @@ git push origin master
 **Causa:** o campo **Dockerfile Location** está vazio ou apontando para a raiz, mas os Dockerfiles do projeto ficam em `apps/web/` e `apps/api/`.
 
 **Solução:** em **Configuration → Build** da aplicação no Coolify, defina:
+
 - **Base Directory:** `/`
 - **Dockerfile Location:** `/apps/web/Dockerfile` ou `/apps/api/Dockerfile`
 
@@ -570,6 +589,7 @@ git push origin master
 **Causa:** o registro DNS para o subdomínio não existe na Cloudflare.
 
 **Solução:** crie o registro wildcard na Cloudflare:
+
 ```
 *.s.apps-ia.ham.org.br   A   <IP_DO_SERVIDOR>
 ```
@@ -610,6 +630,7 @@ Se não aparecer, edite o `docker-compose.yml` do proxy em **Server → Proxy �
 **Causa:** muitas tentativas falhas de emissão de cert para o mesmo domínio em 1 hora.
 
 **Solução:**
+
 1. **Pare** todas as tentativas (corrige a causa raiz primeiro)
 2. Aguarde 1 hora (mensagem do erro informa o timestamp exato)
 3. Após corrigir, redeploye apenas uma vez
@@ -756,40 +777,42 @@ Assunto: [INCIDENTE — P<1|2|3>] <nome-do-sistema>
 
 ## 15. Glossário
 
-| Termo | Significado |
-|---|---|
-| **Boilerplate** | Estrutura base de projeto, pronta para ser personalizada. No HAM, é `ham-boilerplate-ia`. |
-| **Build Pack** | Conjunto de instruções para construir a imagem Docker. No HAM, usamos sempre `Dockerfile`. |
-| **Coolify** | Plataforma open-source self-hosted para deploy de aplicações (similar ao Heroku/Vercel). |
-| **Container** | Unidade isolada onde a aplicação roda em produção. |
-| **DNS-01 Challenge** | Método de validação do Let's Encrypt via registro TXT no DNS (não exige expor o servidor). |
-| **Dockerfile** | Arquivo que descreve como construir a imagem Docker da aplicação. |
-| **Environment** | Conjunto de aplicações de um mesmo projeto (ex.: production, staging). |
-| **GitHub App** | Integração que permite ao Coolify ler repositórios privados e receber webhooks de push. |
-| **Health Check** | Verificação periódica de que a aplicação está respondendo. |
-| **Let's Encrypt** | Autoridade certificadora gratuita usada para emitir SSL. |
-| **Monorepo** | Repositório único contendo múltiplas aplicações (web + api + tipos compartilhados). |
-| **pnpm** | Gerenciador de pacotes Node.js usado no boilerplate (mais rápido que npm/yarn). |
-| **Standalone (Next.js)** | Modo de build do Next.js que gera um servidor Node mínimo, ideal para Docker. |
-| **TD / Transformação Digital** | Time responsável pela infraestrutura, deploys e operações no HAM. |
-| **Traefik** | Reverse proxy usado pelo Coolify para rotear requisições e gerenciar SSL. |
-| **Turbo / Turborepo** | Ferramenta de build orchestration usada no monorepo. |
-| **Webhook** | Notificação automática enviada pelo GitHub ao Coolify quando há push. |
-| **Wildcard SSL** | Certificado que cobre qualquer subdomínio (`*.dominio.com`) com um único cert. |
+
+| Termo                          | Significado                                                                                |
+| ------------------------------ | ------------------------------------------------------------------------------------------ |
+| **Boilerplate**                | Estrutura base de projeto, pronta para ser personalizada. No HAM, é `ham-boilerplate-ia`.  |
+| **Build Pack**                 | Conjunto de instruções para construir a imagem Docker. No HAM, usamos sempre `Dockerfile`. |
+| **Coolify**                    | Plataforma open-source self-hosted para deploy de aplicações (similar ao Heroku/Vercel).   |
+| **Container**                  | Unidade isolada onde a aplicação roda em produção.                                         |
+| **DNS-01 Challenge**           | Método de validação do Let's Encrypt via registro TXT no DNS (não exige expor o servidor). |
+| **Dockerfile**                 | Arquivo que descreve como construir a imagem Docker da aplicação.                          |
+| **Environment**                | Conjunto de aplicações de um mesmo projeto (ex.: production, staging).                     |
+| **GitHub App**                 | Integração que permite ao Coolify ler repositórios privados e receber webhooks de push.    |
+| **Health Check**               | Verificação periódica de que a aplicação está respondendo.                                 |
+| **Let's Encrypt**              | Autoridade certificadora gratuita usada para emitir SSL.                                   |
+| **Monorepo**                   | Repositório único contendo múltiplas aplicações (web + api + tipos compartilhados).        |
+| **pnpm**                       | Gerenciador de pacotes Node.js usado no boilerplate (mais rápido que npm/yarn).            |
+| **Standalone (Next.js)**       | Modo de build do Next.js que gera um servidor Node mínimo, ideal para Docker.              |
+| **TD / Transformação Digital** | Time responsável pela infraestrutura, deploys e operações no HAM.                          |
+| **Traefik**                    | Reverse proxy usado pelo Coolify para rotear requisições e gerenciar SSL.                  |
+| **Turbo / Turborepo**          | Ferramenta de build orchestration usada no monorepo.                                       |
+| **Webhook**                    | Notificação automática enviada pelo GitHub ao Coolify quando há push.                      |
+| **Wildcard SSL**               | Certificado que cobre qualquer subdomínio (`*.dominio.com`) com um único cert.             |
+
 
 ---
 
 ## Anexos
 
-- [`CLAUDE.md`](./CLAUDE.md) — Instruções de contexto principal para agentes de IA
-- [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — Arquitetura geral do boilerplate
-- [`docs/DEPLOYMENT.md`](./docs/DEPLOYMENT.md) — Detalhes técnicos do processo de deploy
-- [`docs/SECURITY.md`](./docs/SECURITY.md) — Diretrizes de segurança
-- [`docs/CONVENTIONS.md`](./docs/CONVENTIONS.md) — Padrões de código e nomenclatura
+- `[CLAUDE.md](./CLAUDE.md)` — Instruções de contexto principal para agentes de IA
+- `[docs/ARCHITECTURE.md](./docs/ARCHITECTURE.md)` — Arquitetura geral do boilerplate
+- `[docs/DEPLOYMENT.md](./docs/DEPLOYMENT.md)` — Detalhes técnicos do processo de deploy
+- `[docs/SECURITY.md](./docs/SECURITY.md)` — Diretrizes de segurança
+- `[docs/CONVENTIONS.md](./docs/CONVENTIONS.md)` — Padrões de código e nomenclatura
 
 ---
 
 **Versão deste guia:** 1.0
 **Última atualização:** 2026-05-15
-**Mantido por:** Time de Transformação Digital — HAM
+**Mantido por:** Time de Transformação Digital — HAM  
 **Dúvidas:** abrir ticket no canal oficial da TD.
