@@ -6,7 +6,7 @@
 
 | Tool | Versão | Por quê |
 |---|---|---|
-| Node.js | 20 LTS | LTS atual, suportado pelo Next 15 e Nest 10 |
+| Node.js | 24.16.0 LTS | LTS atual, suportado pelo Next 15 e Nest 10 |
 | pnpm | 9.12+ | Workspaces eficientes, instalações reproduzíveis |
 | Turborepo | 2.x | Pipeline incremental + cache |
 | TypeScript | 5.6+ | Tipagem estrita |

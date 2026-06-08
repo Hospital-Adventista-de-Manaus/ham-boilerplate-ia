@@ -2,7 +2,7 @@
 
 ## Pré-requisitos
 
-- Node.js 20 (use `nvm use` na raiz — `.nvmrc` fixa a versão)
+- Node.js 24.16.0 (use `nvm use` na raiz — `.nvmrc` fixa a versão)
 - pnpm 9.12+ (`corepack enable && corepack prepare pnpm@9.12.0 --activate`)
 - Docker + Docker Compose (opcional, para subir o stack inteiro)
 

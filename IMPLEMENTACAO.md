@@ -25,10 +25,10 @@
 
 Antes de começar, garanta que você tem:
 
-- [ ] **Node.js 20** instalado (`node -v` → `v20.x.x`)
+- [ ] **Node.js 24.16.0** instalado (`node -v` → `v24.16.0`)
   ```bash
   # se não tiver, use nvm:
-  nvm install 20 && nvm use 20
+  nvm install 24.16.0 && nvm use 24.16.0
   ```
 - [ ] **pnpm 9.12+** ativo
   ```bash

@@ -2,7 +2,7 @@
 # Build context esperado: raiz do monorepo
 # Coolify: aponte "Base Directory" = / e "Dockerfile Location" = apps/web/Dockerfile
 
-ARG NODE_VERSION=20-alpine
+ARG NODE_VERSION=24.16.0-alpine
 
 # ───────────────────────────────────────────────
 # 1) Base com pnpm + corepack

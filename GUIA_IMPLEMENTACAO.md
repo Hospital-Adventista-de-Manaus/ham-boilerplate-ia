@@ -94,7 +94,7 @@
 
 - Conta no GitHub vinculada ao e-mail institucional `@ham.org.br`
 - Membro da organização `Hospital-Adventista-de-Manaus` no GitHub (se não for, solicitar à TD)
-- Node.js 20+ e `pnpm@9` instalados localmente
+- Node.js 24.16.0+ e `pnpm@9` instalados localmente
 - Git instalado e autenticado (SSH key ou HTTPS via PAT)
 - Cópia local do projeto baseada no boilerplate `ham-boilerplate-ia`
 - Sistema rodando localmente sem erros (`pnpm dev` funciona)
