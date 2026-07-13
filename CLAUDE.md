@@ -4,7 +4,56 @@
 
 ---
 
-## 🔄 Sincronização com o git (faça sempre)
+<!-- BOOTSTRAP:START -->
+## 🚀 ATENÇÃO: Este é o BOILERPLATE ORIGINAL — modo bootstrap ATIVO
+
+**SE VOCÊ ESTÁ VENDO ISTO, A PESSOA QUER CRIAR UM PROJETO NOVO.**
+
+Verifique rapidamente:
+- `package.json` tem `"name": "ham-boilerplate-ia"`? ✅ É o boilerplate original.
+- `origin` aponta para `Hospital-Adventista-de-Manaus/ham-boilerplate-ia`? ✅ É o boilerplate original.
+
+**SE AMBAS FOREM SIM:** Você está no **modo bootstrap**. Ignore toda a documentação abaixo e siga APENAS isto:
+
+### Fluxo de Criação de Projeto Novo
+
+1. **Pergunte o nome do projeto:**
+   > "Qual é o nome do projeto que você quer criar?"
+   
+   Confirme o slug derivado (ex: "Painel de Sepse" → `painel-de-sepse`).
+
+2. **Pergunte o e-mail (se não tiver git config):**
+   > "Qual é seu e-mail corporativo? (ex: voce@ham.org.br)"
+
+3. **Execute o script de bootstrap:**
+   ```bash
+   node scripts/bootstrap/novo-projeto.mjs --nome "Nome Dado" --email "email@ham.org.br"
+   ```
+
+4. **Aguarde a execução** — ele:
+   - Copia os arquivos do boilerplate
+   - Chama a API de provisionamento
+   - Cria o repositório privado na organização
+   - Provisiona um banco de dados isolado
+   - Faz push para `staging`
+
+5. **Reporte o resultado** — se `ok: true`:
+   - Envie o **link do repositório** (`repoUrl`)
+   - Localize de onde o projeto foi criado (`dest`)
+   - Mencione que as **credenciais do banco estão em `apps/api/.env`** (não exiba a senha)
+   - Próximo passo sugerido: `pnpm install && pnpm dev`
+
+**Pré-requisitos:** ver `docs/PRE_REQUISITOS.md` se a máquina não tiver Node/Git/pnpm.
+
+**Nota:** Esta seção é removida automaticamente nos projetos gerados (não aparece em projetos novos).
+
+<!-- BOOTSTRAP:END -->
+
+---
+
+## 🔄 Sincronização com o git (faça sempre em projetos existentes)
+
+**NOTA:** Esta seção só se aplica se você **NÃO** está no modo bootstrap. Se é um projeto gerado (não o boilerplate), siga isto:
 
 **No início de cada sessão e antes de editar qualquer arquivo**, rode:
 
@@ -18,27 +67,6 @@ O script é seguro: só faz fast-forward e **não** sobrescreve mudanças locais
 está bloqueado por mudanças locais, resolva antes de continuar.
 
 ---
-
-<!-- BOOTSTRAP:START -->
-## 🚀 Modo Bootstrap (só no boilerplate original)
-
-Se este repositório ainda é o **boilerplate original** — ou seja, `package.json` tem
-`"name": "ham-boilerplate-ia"` **e** o `origin` aponta para
-`Hospital-Adventista-de-Manaus/ham-boilerplate-ia` — então a pessoa provavelmente quer
-**criar um projeto novo** a partir dele.
-
-Nesse caso, ofereça conduzir o fluxo de projeto novo:
-
-1. Pergunte **"Qual o nome do projeto?"** e confirme o slug derivado.
-2. Rode o roteiro completo em `.claude/commands/novo-projeto.md` (ou execute direto
-   `node scripts/bootstrap/novo-projeto.mjs --nome "<nome>"`).
-3. O script cria a pasta nova, **cria o repositório privado na org ANTES do push** e envia a
-   branch `staging`. Peça confirmação antes de criar o repo / dar push (ações externas).
-4. Ao final, reporte o link do repositório, a pasta local e a branch `staging`.
-
-Pré-requisitos da máquina estão em `docs/PRE_REQUISITOS.md`. **Não** rode este fluxo se o
-repositório já for um projeto gerado (esta seção é removida automaticamente nos projetos novos).
-<!-- BOOTSTRAP:END -->
 
 ## 1. O que este repositório é
 
