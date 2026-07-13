@@ -8,6 +8,21 @@ Next.js 15 (web) ──HTTP──► NestJS 10 (api)
    └────── Coolify ◄── git push ┘
 ```
 
+## 🚀 Começar um projeto novo com IA (recomendado)
+
+Não precisa entender o código. Instale os pré-requisitos, entregue o link deste repositório ao
+Claude Code e peça para criar seu projeto:
+
+> "Clona esse repositório e cria um projeto novo pra mim."
+
+O Claude vai perguntar o **nome do projeto**, criar uma pasta nova, criar o **repositório privado
+na organização** e publicar na branch **`staging`** — tudo guiado.
+
+👉 Antes, siga o **[`docs/PRE_REQUISITOS.md`](./docs/PRE_REQUISITOS.md)** (o que instalar e como
+autenticar no GitHub). Quem preferir o comando explícito pode usar `/novo-projeto` no Claude Code.
+
+---
+
 ## TL;DR
 
 ```bash

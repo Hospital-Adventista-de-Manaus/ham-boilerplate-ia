@@ -4,6 +4,42 @@
 
 ---
 
+## 🔄 Sincronização com o git (faça sempre)
+
+**No início de cada sessão e antes de editar qualquer arquivo**, rode:
+
+```
+node scripts/sync/git-sync.mjs
+```
+
+Isso garante que você trabalha sobre o que está na branch atual (`staging`/`main`) do GitHub.
+O script é seguro: só faz fast-forward e **não** sobrescreve mudanças locais não commitadas
+(nesse caso ele apenas avisa). Leia o bloco `<RESULT>` para saber o status. Se ele avisar que
+está bloqueado por mudanças locais, resolva antes de continuar.
+
+---
+
+<!-- BOOTSTRAP:START -->
+## 🚀 Modo Bootstrap (só no boilerplate original)
+
+Se este repositório ainda é o **boilerplate original** — ou seja, `package.json` tem
+`"name": "ham-boilerplate-ia"` **e** o `origin` aponta para
+`Hospital-Adventista-de-Manaus/ham-boilerplate-ia` — então a pessoa provavelmente quer
+**criar um projeto novo** a partir dele.
+
+Nesse caso, ofereça conduzir o fluxo de projeto novo:
+
+1. Pergunte **"Qual o nome do projeto?"** e confirme o slug derivado.
+2. Rode o roteiro completo em `.claude/commands/novo-projeto.md` (ou execute direto
+   `node scripts/bootstrap/novo-projeto.mjs --nome "<nome>"`).
+3. O script cria a pasta nova, **cria o repositório privado na org ANTES do push** e envia a
+   branch `staging`. Peça confirmação antes de criar o repo / dar push (ações externas).
+4. Ao final, reporte o link do repositório, a pasta local e a branch `staging`.
+
+Pré-requisitos da máquina estão em `docs/PRE_REQUISITOS.md`. **Não** rode este fluxo se o
+repositório já for um projeto gerado (esta seção é removida automaticamente nos projetos novos).
+<!-- BOOTSTRAP:END -->
+
 ## 1. O que este repositório é
 
 Boilerplate monorepo para projetos do **HAM (Hospital Adventista de Manaus)** desenvolvidos com Claude Code. Stack escolhida para padronização interna:
