@@ -13,11 +13,14 @@
  *   6. faz push para `staging`.
  *
  * Uso:
- *   node scripts/bootstrap/novo-projeto.mjs --nome "Meu Projeto" --email voce@ham.org.br [--dir <destino>] [--skip-remote]
+ *   node scripts/bootstrap/novo-projeto.mjs --nome "Meu Projeto" --email voce@ham.org.br [--github-user <login>] [--dir <destino>] [--skip-remote]
  *
  * Flags:
  *   --nome         Nome do projeto (obrigatório). Vira o título humano; o slug é derivado dele.
  *   --email        E-mail do responsável (obrigatório, salvo com --skip-remote). Enviado à API.
+ *   --github-user  Login do GitHub de quem vai dar push. Se omitido, tenta detectar via
+ *                  `gh api user --jq .login`. Quando presente, a API adiciona a conta como
+ *                  collaborator (push) no repo — sem ele, só o team padrão da org tem acesso.
  *   --dir          Destino explícito. Padrão: pasta irmã <repo>/../<slug>.
  *   --skip-remote  Só faz o scaffold local + git init/commit (sem API/push). Útil para dry-run.
  *
@@ -106,6 +109,18 @@ if (!projectName) {
 const email =
   (typeof args.email === 'string' ? args.email.trim() : '') ||
   (run('git', ['config', 'user.email']).stdout || '').trim();
+
+// Login do GitHub de quem vai dar push: --github-user tem prioridade; senão
+// tenta detectar via `gh api user --jq .login` (se o gh existir e estiver logado).
+// É opcional: sem ele a API segue só com o team padrão da org.
+function detectGithubUser() {
+  const r = run('gh', ['api', 'user', '--jq', '.login'], { shell: process.platform === 'win32' });
+  if (r.status === 0) return (r.stdout || '').trim();
+  return '';
+}
+const githubUsername =
+  (typeof args['github-user'] === 'string' ? args['github-user'].trim() : '') ||
+  (skipRemote ? '' : detectGithubUser());
 
 const slug = slugify(projectName);
 if (!slug) {
@@ -229,6 +244,11 @@ if (skipRemote) {
 
 // ── 6. Provisiona repo + banco via API e conecta o `origin` (ANTES do push) ─────
 console.log(`▶ Provisionando repositório + banco via API para "${slug}"…`);
+if (githubUsername) {
+  console.log(`▶ Conta GitHub "${githubUsername}" será adicionada como collaborator (push).`);
+} else {
+  console.log('▶ Sem login do GitHub detectado — o acesso ficará só com o team padrão da org.');
+}
 
 /** @type {any} */
 let provision;
@@ -236,7 +256,12 @@ try {
   const resp = await fetch(`${PROVISION_API_URL}/projects`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ nomeProjeto: slug, nome: projectName, email }),
+    body: JSON.stringify({
+      nomeProjeto: slug,
+      nome: projectName,
+      email,
+      ...(githubUsername ? { githubUsername } : {}),
+    }),
   });
   const raw = await resp.text();
   if (!resp.ok) {

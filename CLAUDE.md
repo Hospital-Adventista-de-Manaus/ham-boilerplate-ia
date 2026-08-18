@@ -25,19 +25,28 @@ Verifique rapidamente:
 2. **Pergunte o e-mail (se não tiver git config):**
    > "Qual é seu e-mail corporativo? (ex: voce@ham.org.br)"
 
-3. **Execute o script de bootstrap:**
+3. **Detecte o username do GitHub logado** (para a API dar acesso de push à conta da pessoa):
    ```bash
-   node scripts/bootstrap/novo-projeto.mjs --nome "Nome Dado" --email "email@ham.org.br"
+   gh api user --jq .login
+   ```
+   - Se retornar um login, passe-o no comando abaixo via `--github-user`.
+   - Se falhar (sem `gh` ou não logado), siga sem a flag — o script também tenta detectar
+     sozinho; sem o username, o acesso ao repo fica só com o team padrão da org.
+
+4. **Execute o script de bootstrap:**
+   ```bash
+   node scripts/bootstrap/novo-projeto.mjs --nome "Nome Dado" --email "email@ham.org.br" --github-user "login-detectado"
    ```
 
-4. **Aguarde a execução** — ele:
+5. **Aguarde a execução** — ele:
    - Copia os arquivos do boilerplate
-   - Chama a API de provisionamento
+   - Chama a API de provisionamento (enviando o `githubUsername`, se detectado)
    - Cria o repositório privado na organização
+   - Adiciona a conta do GitHub da pessoa como collaborator (push), quando o username foi enviado
    - Provisiona um banco de dados isolado
    - Faz push para `staging`
 
-5. **Reporte o resultado** — se `ok: true`:
+6. **Reporte o resultado** — se `ok: true`:
    - Envie o **link do repositório** (`repoUrl`)
    - Localize de onde o projeto foi criado (`dest`)
    - Mencione que as **credenciais do banco estão em `apps/api/.env`** (não exiba a senha)

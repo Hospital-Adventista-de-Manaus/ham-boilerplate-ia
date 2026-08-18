@@ -17,7 +17,9 @@ Rode e confirme que passam:
 - `node -v` e `git --version` (existem no PATH).
 - A API está no ar: `GET https://api-provisionamento.apps.ham.org.br/health` deve responder `{"status":"ok"}`.
 
-Não é necessário `gh` nem login no GitHub. Detalhes em `docs/PRE_REQUISITOS.md`.
+O `gh` não é obrigatório, mas **se existir e estiver logado**, detecte o username com
+`gh api user --jq .login` — ele será enviado à API para dar acesso de push à conta da pessoa.
+Sem ele, o acesso ao repo fica só com o team padrão da org. Detalhes em `docs/PRE_REQUISITOS.md`.
 
 ## Passo 2 — Perguntar nome e e-mail
 Pergunte: **"Qual o nome do projeto?"** e **"Qual o seu e-mail?"** (o e-mail é exigido pela API).
@@ -32,8 +34,11 @@ privado na org e provisiona o banco), conecta o `origin`, grava as credenciais e
 (cria repositório + banco e faz push — ações externas):
 
 ```
-node scripts/bootstrap/novo-projeto.mjs --nome "<NOME QUE A PESSOA DEU>" --email "<E-MAIL DA PESSOA>"
+node scripts/bootstrap/novo-projeto.mjs --nome "<NOME QUE A PESSOA DEU>" --email "<E-MAIL DA PESSOA>" --github-user "<LOGIN DETECTADO>"
 ```
+
+Omita `--github-user` se não conseguiu detectar o login (o script também tenta detectar sozinho
+via `gh api user --jq .login`; sem o username, o fluxo segue normalmente só com o team da org).
 
 Leia o bloco `<RESULT>…</RESULT>` impresso pelo script:
 - `ok: true` → deu tudo certo.
