@@ -1,53 +1,53 @@
-import Link from 'next/link';
-import { HealthBadge } from '@/components/HealthBadge';
+import Image from 'next/image';
+import { EntrarButton } from '@/components/EntrarButton';
 
 export default function Home() {
+  const projectName = process.env.NEXT_PUBLIC_HAM_REPO || 'ham-boilerplate-ia';
+
   return (
-    <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center gap-8 px-6 py-16">
-      <header className="space-y-3">
-        <span className="inline-flex items-center rounded-full border border-zinc-200 bg-white px-3 py-1 text-xs font-medium uppercase tracking-wider text-zinc-600">
-          HAM · Boilerplate IA
-        </span>
-        <h1 className="text-4xl font-semibold tracking-tight text-zinc-900">
-          Monorepo Next.js + NestJS
-        </h1>
-        <p className="text-lg text-zinc-600">
-          Pronto para deploy no Coolify via push no GitHub. Documentação para Claude Code em{' '}
-          <code className="rounded bg-zinc-200 px-1.5 py-0.5 text-sm">docs/</code> e{' '}
-          <code className="rounded bg-zinc-200 px-1.5 py-0.5 text-sm">CLAUDE.md</code>.
-        </p>
-      </header>
+    <main className="grid min-h-dvh md:grid-cols-2">
+      <div className="flex flex-col justify-center bg-surface px-6 py-6 sm:px-8">
+        <div className="mx-auto w-full max-w-sm space-y-4 sm:space-y-6">
+          <Image
+            src="/brand/icone.png"
+            alt="Hospital Adventista de Manaus"
+            width={88}
+            height={98}
+            priority
+            quality={100}
+            className="h-14 w-auto sm:h-20"
+          />
 
-      <section className="rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-sm font-medium text-zinc-500">Status da API</h2>
-            <p className="mt-1 text-xs text-zinc-400">
-              GET {process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}/health
+          <div className="space-y-2">
+            <p className="font-mono text-xs font-bold uppercase tracking-wider text-ham-500">
+              Hospital Adventista de Manaus
+            </p>
+            <h1 className="text-4xl font-extrabold tracking-tight text-ham-900 sm:text-5xl">{projectName}</h1>
+            <p className="text-sm text-body">
+              Começando um projeto novo utilizando inteligência artificial.
             </p>
           </div>
-          <HealthBadge />
-        </div>
-      </section>
 
-      <Link
-        href="/hello"
-        className="group rounded-2xl border border-zinc-200 bg-white p-6 shadow-sm transition hover:border-zinc-900 hover:shadow-md"
-      >
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-lg font-semibold text-zinc-900">
-              Teste end-to-end → <span className="font-mono text-base text-zinc-500">/hello</span>
-            </h2>
-            <p className="mt-1 text-sm text-zinc-500">
-              Valida server-side fetch (rede interna) e client-side fetch (CORS) em uma tela só.
-            </p>
+          <div className="rounded-xl bg-bg px-4 py-3 text-sm text-body">
+            Acesso restrito a colaboradores com email <span className="font-bold">@ham.org.br</span>.
           </div>
-          <span className="text-2xl text-zinc-400 transition group-hover:translate-x-1 group-hover:text-zinc-900">
-            →
-          </span>
+
+          <EntrarButton href="/boas-vindas" />
+
+          <p className="text-center text-xs font-semibold text-status-waiting">
+            Projeto ainda em desenvolvimento — enquanto isso, o acesso usa um login fictício.
+          </p>
         </div>
-      </Link>
+      </div>
+
+      <div className="relative hidden flex-col justify-end overflow-hidden bg-ham-900 p-6 sm:p-10 md:flex">
+        <div className="absolute inset-0 bg-gradient-to-br from-ham-700/40 via-transparent to-transparent" />
+        <div className="absolute right-0 top-0 h-[55%] w-[65%] rounded-bl-[64px] bg-white/5" />
+        <h2 className="relative max-w-sm text-3xl font-extrabold leading-tight text-white text-balance">
+          Automatizando processos para fortalecer o <span className="text-ham-300">cuidado em saúde</span>.
+        </h2>
+        <p className="mt-3 text-sm text-[#A9CBE3]">Hospital Adventista de Manaus</p>
+      </div>
     </main>
   );
 }

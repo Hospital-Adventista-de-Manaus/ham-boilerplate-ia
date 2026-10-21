@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  ::selection {
+    background: #0de3ff;
+    color: #00355a;
+  }
+
+  /* :where() zera a especificidade — qualquer classe Tailwind (text-*, hover:text-*)
+     em um <a> específico sempre vence este estilo padrão de link. */
+  :where(a) {
+    color: #008dff;
+  }
+
+  :where(a:hover) {
+    color: #00558c;
+  }
+
+  /* Ícones padrão do design system — ver src/components/Icon.tsx. */
+  .material-symbols-outlined {
+    font-family: 'Material Symbols Outlined';
+    font-weight: normal;
+    font-style: normal;
+    font-size: 24px;
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+  }
+}

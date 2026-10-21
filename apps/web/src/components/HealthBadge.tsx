@@ -16,15 +16,15 @@ export async function HealthBadge() {
 
   if (!health) {
     return (
-      <span className="inline-flex items-center gap-2 rounded-full bg-red-50 px-3 py-1 text-sm font-medium text-red-700">
-        <span className="size-2 rounded-full bg-red-500" /> offline
+      <span className="inline-flex items-center gap-2 rounded-full bg-[#FDF2F1] px-3 py-1 text-sm font-semibold text-status-blocked">
+        <span className="size-2 rounded-full bg-status-blocked" /> offline
       </span>
     );
   }
 
   return (
-    <span className="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-3 py-1 text-sm font-medium text-emerald-700">
-      <span className="size-2 rounded-full bg-emerald-500" /> {health.status}
+    <span className="inline-flex items-center gap-2 rounded-full bg-[#E6F7F1] px-3 py-1 text-sm font-semibold text-status-done">
+      <span className="size-2 rounded-full bg-status-done" /> {health.status}
     </span>
   );
 }
