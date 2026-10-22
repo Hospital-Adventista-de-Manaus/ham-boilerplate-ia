@@ -119,11 +119,19 @@ um resumo de uma linha ("ambiente verificado, GitHub conectado") basta.
    pedir ajuda — o repositório e o commit local já existem, então um push manual depois de corrigir
    a causa resolve sem precisar recomeçar.
 
-6. **Depois do `ok: true`, suba o projeto você mesmo — nunca pergunte se pode.** `pnpm install &&
-   pnpm dev` (ou os comandos do preview do seu ambiente) não é destrutivo e faz parte do fluxo até
-   o fim: a tarefa só termina quando front e back estiverem rodando e você confirmou que o `/health`
-   da API respondeu. Isso vale mesmo que a pessoa não tenha pedido explicitamente — "criar o
-   projeto" inclui deixá-lo rodando.
+6. **Depois do `ok: true`, suba o projeto você mesmo, localmente — nunca pergunte se pode.**
+   `pnpm install && pnpm dev` (ou os comandos do preview do seu ambiente) não é destrutivo e faz
+   parte do fluxo até o fim: a tarefa só termina quando front e back estiverem rodando em
+   `localhost` e você confirmou que o `/health` da API respondeu. Isso vale mesmo que a pessoa não
+   tenha pedido explicitamente — "criar o projeto" inclui deixá-lo rodando.
+
+   **"Subir o projeto" aqui significa EXCLUSIVAMENTE rodar localmente (`pnpm dev`/Docker local).**
+   Nunca interprete como deploy. Nesta etapa (criação de projeto), **não mencione Coolify, não
+   ofereça fazer deploy, e não pergunte se a pessoa quer subir em produção/Coolify** — isso não faz
+   parte do fluxo de criação e só deve ser discutido se a própria pessoa perguntar sobre deploy
+   explicitamente, em outra ocasião. Se em algum momento você notar vontade de perguntar "quer que
+   eu suba no Coolify?" ou algo parecido, é sinal de que você confundiu os dois sentidos de
+   "subir" — pare e apenas rode localmente.
 
 7. **Relatório final — sempre com uma tabela curta, nunca um parágrafo técnico:**
 
@@ -237,6 +245,7 @@ Boilerplate monorepo para projetos do **HAM (Hospital Adventista de Manaus)** de
 10. **Não invente comandos.** Os scripts oficiais estão em `package.json` (raiz + cada app).
 11. **Toda UI usa obrigatoriamente o design system HAM** (tokens em `apps/web/tailwind.config.ts`, detalhado em `apps/web/CLAUDE.md`). Nenhuma tela/componente novo usa cor ou fonte fora desses tokens.
 12. **Modelo e esforço padrão em `.claude/settings.json`** (`model: "sonnet"`, `effortLevel: "medium"`) — economiza tokens e mantém o ritmo ágil descrito na skill `fast-executor`. Não aumente pra "high"/"xhigh" por padrão; se uma tarefa específica exigir mais raciocínio, ajuste pontualmente na sessão (`/model`, `/effort`), não neste arquivo.
+13. **"Subir a aplicação"/"rodar o projeto" significa sempre local** (`pnpm dev`, `pnpm docker:up`), nunca deploy. Quando a pessoa pedir isso, apenas suba localmente e confirme que respondeu — não mencione Coolify nem pergunte se ela quer fazer deploy/publicar em produção. Só fale de Coolify/deploy se a pessoa pedir isso explicitamente (ex.: "faz o deploy", "publica em produção").
 
 ## 5. Fluxo de deploy (resumo)
 
