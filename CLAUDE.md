@@ -36,6 +36,10 @@ O único dado que só a pessoa sabe é **o nome do projeto**. Tudo o resto (Node
 autenticação do GitHub) você verifica e corrige sozinho, sem interromper, **antes** de rodar o
 script. Só volte a perguntar algo se o Passo 0 abaixo esgotar as alternativas automáticas.
 
+Isso inclui nunca apresentar a autenticação do git/GitHub como uma pergunta de múltipla escolha
+("como você quer autenticar: gh, SSH, token, pausar?"). Tente resolver sozinho (ver regra 14 na
+seção "Regras invioláveis") e só volte à pessoa se tudo falhar, numa frase direta.
+
 ### Passo 0 — Preparação automática do ambiente (faça isso ANTES de perguntar o nome)
 
 Rode estas checagens em sequência, corrigindo o que der automaticamente:
@@ -122,16 +126,17 @@ um resumo de uma linha ("ambiente verificado, GitHub conectado") basta.
 6. **Depois do `ok: true`, suba o projeto você mesmo, localmente — nunca pergunte se pode.**
    `pnpm install && pnpm dev` (ou os comandos do preview do seu ambiente) não é destrutivo e faz
    parte do fluxo até o fim: a tarefa só termina quando front e back estiverem rodando em
-   `localhost` e você confirmou que o `/health` da API respondeu. Isso vale mesmo que a pessoa não
-   tenha pedido explicitamente — "criar o projeto" inclui deixá-lo rodando.
+   `localhost` (numa porta disponível) e você confirmou que o `/health` da API respondeu. Isso
+   vale mesmo que a pessoa não tenha pedido explicitamente — "criar o projeto" inclui deixá-lo
+   rodando.
 
-   **"Subir o projeto" aqui significa EXCLUSIVAMENTE rodar localmente (`pnpm dev`/Docker local).**
-   Nunca interprete como deploy. Nesta etapa (criação de projeto), **não mencione Coolify, não
-   ofereça fazer deploy, e não pergunte se a pessoa quer subir em produção/Coolify** — isso não faz
-   parte do fluxo de criação e só deve ser discutido se a própria pessoa perguntar sobre deploy
-   explicitamente, em outra ocasião. Se em algum momento você notar vontade de perguntar "quer que
-   eu suba no Coolify?" ou algo parecido, é sinal de que você confundiu os dois sentidos de
-   "subir" — pare e apenas rode localmente.
+   **"Subir o projeto" aqui significa EXCLUSIVAMENTE rodar localmente em `localhost` + porta
+   disponível (`pnpm dev`).** Nunca interprete como deploy, e nunca mencione Docker ou Coolify
+   nesse contexto — nem para explicar, nem para oferecer, nem para perguntar. Essas palavras não
+   fazem parte da resposta pra pessoa nesta etapa (criação/execução local de projeto) e só devem
+   aparecer se a própria pessoa perguntar sobre deploy explicitamente, em outra ocasião. Se em
+   algum momento você notar vontade de citar Docker, Coolify ou "produção", é sinal de que você
+   confundiu os dois sentidos de "subir" — pare e apenas rode localmente, sem citar nada disso.
 
 7. **Relatório final — sempre com uma tabela curta, nunca um parágrafo técnico:**
 
@@ -245,7 +250,8 @@ Boilerplate monorepo para projetos do **HAM (Hospital Adventista de Manaus)** de
 10. **Não invente comandos.** Os scripts oficiais estão em `package.json` (raiz + cada app).
 11. **Toda UI usa obrigatoriamente o design system HAM** (tokens em `apps/web/tailwind.config.ts`, detalhado em `apps/web/CLAUDE.md`). Nenhuma tela/componente novo usa cor ou fonte fora desses tokens.
 12. **Modelo e esforço padrão em `.claude/settings.json`** (`model: "sonnet"`, `effortLevel: "medium"`) — economiza tokens e mantém o ritmo ágil descrito na skill `fast-executor`. Não aumente pra "high"/"xhigh" por padrão; se uma tarefa específica exigir mais raciocínio, ajuste pontualmente na sessão (`/model`, `/effort`), não neste arquivo.
-13. **"Subir a aplicação"/"rodar o projeto" significa sempre local** (`pnpm dev`, `pnpm docker:up`), nunca deploy. Quando a pessoa pedir isso, apenas suba localmente e confirme que respondeu — não mencione Coolify nem pergunte se ela quer fazer deploy/publicar em produção. Só fale de Coolify/deploy se a pessoa pedir isso explicitamente (ex.: "faz o deploy", "publica em produção").
+13. **"Subir a aplicação"/"rodar o projeto" significa sempre `localhost` + porta disponível** (`pnpm dev`), nunca deploy. Quando a pessoa pedir isso, apenas suba localmente e confirme que respondeu — **não mencione Docker nem Coolify** nessa resposta, e não pergunte se ela quer fazer deploy/publicar em produção. Só fale de Docker/Coolify/deploy se a pessoa pedir isso explicitamente (ex.: "faz o deploy", "publica em produção", "sobe no Coolify").
+14. **Autenticação do git/GitHub nunca vira pergunta de múltipla escolha pra pessoa.** Ao detectar qualquer necessidade de autenticar o git com o GitHub (push falhando, clonar repo privado, etc.), resolva sozinho antes de envolver a pessoa, nesta ordem: (1) teste se o git já enxerga o GitHub (`git ls-remote` num repo público, ou tentando a operação real); (2) se `gh` estiver instalado, `gh auth status` e, se autenticado, `gh auth setup-git`; (3) se não autenticado, rode `gh auth login` você mesmo (fluxo interativo) em vez de perguntar "como você quer autenticar"; (4) se `gh` não existir, verifique se já há outro `credential.helper`/SSH configurado (`git config --get credential.helper`, `ssh -T git@github.com`) antes de sugerir instalar algo. Só pare pra perguntar à pessoa se **todas** essas alternativas falharem — e mesmo aí, numa frase direta, nunca como um menu de opções técnicas (SSH vs. token vs. credential manager).
 
 ## 5. Fluxo de deploy (resumo)
 
