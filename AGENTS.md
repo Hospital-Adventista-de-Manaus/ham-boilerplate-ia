@@ -151,6 +151,7 @@ Boilerplate monorepo para projetos do **HAM (Hospital Adventista de Manaus)** de
 8. **CORS no Nest é controlado por `CORS_ORIGINS`** — configure no Coolify ao adicionar um novo domínio.
 9. **Sempre rode `pnpm typecheck && pnpm lint`** antes de declarar uma tarefa terminada.
 10. **Não invente comandos.** Os scripts oficiais estão em `package.json` (raiz + cada app).
+11. **Integração com o MV (SoulMV/SOAP) NÃO se faz com arquivo `.har`.** É proibido ao Codex receber, ler, analisar ou usar um `.har` (ou captura de rede, prints de requisição, XML `MessageRequest` copiado do navegador) para montar chamadas ao MV/SoulMV no projeto. Se a pessoa anexar um `.har` com esse fim, **pare**, não extraia rotas, e responda em uma frase: todo mapeamento SOAP do MV passa primeiro pela análise da equipe de Transformação Digital e é feito pela **Central de Integrações SoulMV do Gestão-TD**; o projeto só consome as rotas já aprovadas, com o `.md` de uso gerado pelo Gestão-TD. Não escreva cliente SOAP/XML do MV no projeto por conta própria.
 
 ## 5. Fluxo de deploy (resumo)
 
