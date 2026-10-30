@@ -45,7 +45,7 @@ async function fim(codigo, status, linha) {
 }
 
 async function indisponivel() {
-  await fim(4, 'INDISPONIVEL', 'Não foi possível contatar o Gestão-TD agora. Entre em contato com a equipe de Transformação Digital.');
+  await fim(4, 'INDISPONIVEL', 'Não foi possível enviar a solicitação ao Gestão-TD agora. Tente novamente em alguns minutos.');
 }
 
 function gitEmail() {
@@ -70,17 +70,19 @@ async function chamar(url, opcoes) {
 }
 
 const motivo = (arg('motivo') ?? '').trim();
-const projeto = (arg('projeto') ?? nomeProjeto()).trim();
+const projeto = (arg('projeto') ?? nomeProjeto()).toLowerCase().replace(/^@[^/]+\//, '').replace(/[^a-z0-9-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 80);
 const email = (arg('email') ?? gitEmail()).trim();
 const harPath = arg('har') ? resolve(arg('har')) : undefined;
 
 if (motivo.length < 20) await fim(1, 'ERRO_USO', 'Informe a finalidade do uso (--motivo, no mínimo 20 caracteres).');
+if (email && !/@ham\.org\.br$/i.test(email)) await fim(1, 'ERRO_USO', 'Use seu e-mail @ham.org.br (configure `git config user.email` ou passe --email).');
 if (!email) await fim(1, 'ERRO_USO', 'Não encontrei seu e-mail. Configure `git config user.email` ou passe --email.');
 
 let arquivo;
 if (harPath) {
   try {
     arquivo = { nome: basename(harPath), tamanhoBytes: statSync(harPath).size };
+    if (arquivo.tamanhoBytes > 40 * 1024 * 1024) await fim(1, 'ERRO_USO', 'O arquivo de captura passa de 40 MB. Grave um fluxo menor.');
   } catch {
     await fim(1, 'ERRO_USO', 'Arquivo de captura não encontrado no caminho informado.');
   }
@@ -92,10 +94,12 @@ const criada = await chamar(API, {
   headers: { 'content-type': 'application/json' },
   body: JSON.stringify({ projeto, email, motivo, arquivo, origem: 'boilerplate' }),
 });
-if (criada.status === 429) await fim(3, 'LIMITE', 'Muitas solicitações em pouco tempo. Tente novamente mais tarde.');
+if (criada.status === 409) await fim(3, 'JA_PENDENTE', 'Já existe uma solicitação pendente deste projeto e e-mail no Gestão-TD. Aguarde a decisão do administrador.');
+if (criada.status === 400) await fim(1, 'ERRO_USO', 'O Gestão-TD recusou os dados da solicitação. Confira o e-mail (@ham.org.br) e a finalidade (20 a 1000 caracteres).');
+if (criada.status === 429) await fim(3, 'LIMITE', 'Limite de solicitações atingido ou a fila do Gestão-TD está cheia. Tente novamente mais tarde.');
 if (!criada.ok) {
   if (criada.status >= 500 || criada.status === 404) await indisponivel();
-  await fim(1, 'ERRO', 'O Gestão-TD não aceitou a solicitação. Entre em contato com a equipe de Transformação Digital.');
+  await fim(1, 'ERRO', 'O Gestão-TD não aceitou a solicitação. Tente novamente em alguns minutos.');
 }
 const { id, segredo } = await criada.json();
 writeFileSync(STATE_FILE, JSON.stringify({ id, projeto, email, criadaEm: new Date().toISOString() }));
@@ -120,6 +124,8 @@ while (Date.now() < limite) {
 }
 if (!decisao) await fim(3, 'TEMPO_ESGOTADO', 'Ainda aguardando o administrador. Rode o mesmo comando de novo quando ele tiver avaliado.');
 if (decisao.status === 'rejeitada') await fim(2, 'REJEITADA', `O Gestão-TD não aprovou esta integração.${decisao.motivoRejeicao ? ` Motivo: ${decisao.motivoRejeicao}` : ''}`);
+if (decisao.status === 'falhou') await fim(1, 'FALHOU', 'O Gestão-TD não conseguiu processar esta solicitação. Tente enviar a solicitação novamente.');
+if (decisao.status === 'concluida') await fim(0, 'CONCLUIDO', `Esta solicitação já foi concluída (mapeamento ${decisao.mapeamentoId ?? '?'}).`);
 if (decisao.status === 'expirada') await fim(3, 'EXPIRADA', 'A solicitação expirou. Faça uma nova.');
 if (decisao.status !== 'aprovada' || !decisao.uploadToken) await fim(3, 'EXPIRADA', 'Não foi possível obter a autorização. Faça uma nova solicitação.');
 
@@ -131,17 +137,54 @@ if (!harPath) await fim(0, 'APROVADA_SEM_ARQUIVO', 'Informe o caminho do arquivo
 const form = new FormData();
 form.append('har', new Blob([readFileSync(harPath)]), basename(harPath));
 const envio = await chamar(`${API}/${id}/har`, { method: 'POST', headers: { authorization: `Bearer ${decisao.uploadToken}` }, body: form });
-if (!envio.ok) await fim(1, 'FALHA_ENVIO', 'O Gestão-TD recebeu a autorização, mas não conseguiu processar a captura. Avise a equipe de Transformação Digital.');
+if (envio.status === 400) await fim(1, 'FALHA_ENVIO', 'O arquivo informado não é uma captura válida (HAR). A autorização continua válida por alguns minutos; envie o arquivo correto.');
+if (envio.status === 401) await fim(3, 'EXPIRADA', 'A autorização de envio expirou ou já foi usada. Faça uma nova solicitação.');
+if (!envio.ok) await fim(1, 'FALHA_ENVIO', 'O Gestão-TD recebeu a autorização, mas não conseguiu processar a captura. Tente enviar a solicitação novamente.');
 
-const texto = await envio.text();
+// A resposta é NDJSON: etapa/ping (progresso) e, no fim, `concluido` ou `erro`.
 let resultado;
+let falhaMsg;
+const tratarLinha = (linha) => {
+  let ev;
+  try {
+    ev = JSON.parse(linha);
+  } catch {
+    return;
+  }
+  if (ev.tipo === 'etapa') console.log(`Gestão-TD processando a captura: ${ev.etapa}...`);
+  else if (ev.tipo === 'concluido') resultado = ev;
+  else if (ev.tipo === 'erro') falhaMsg = ev.mensagem ?? 'erro no processamento';
+  else if (!ev.tipo && (ev.mapeamentoId || ev.id)) resultado = ev; // JSON simples
+};
 try {
-  const linhas = texto.trim().split('\n').filter(Boolean).map((l) => JSON.parse(l));
-  resultado = linhas.find((l) => l.tipo === 'concluido') ?? linhas[linhas.length - 1];
+  const leitor = envio.body.getReader();
+  const decodificador = new TextDecoder();
+  let resto = '';
+  for (;;) {
+    const { done, value } = await leitor.read();
+    if (done) break;
+    resto += decodificador.decode(value, { stream: true });
+    const partes = resto.split(/\r?\n/);
+    resto = partes.pop() ?? '';
+    partes.filter(Boolean).forEach(tratarLinha);
+  }
+  if (resto.trim()) tratarLinha(resto.trim());
 } catch {
-  resultado = undefined;
+  /* conexão caiu antes do fim: confere o estado na API abaixo */
 }
-if (!resultado || (!resultado.mapeamentoId && !resultado.id)) await fim(1, 'FALHA_ENVIO', 'Resposta inesperada do Gestão-TD. Avise a equipe de Transformação Digital.');
+if (falhaMsg) await fim(1, 'FALHA_ENVIO', `O Gestão-TD não conseguiu processar a captura: ${falhaMsg}`);
+if (!resultado) {
+  const r = await chamar(`${API}/${id}/aguardar?timeout=1`, { headers: { 'x-solicitacao-segredo': segredo } });
+  const corpo = r.ok ? await r.json().catch(() => undefined) : undefined;
+  if (corpo?.status === 'concluida' && corpo.mapeamentoId) {
+    console.log(`Mapeamento ${corpo.mapeamentoId} criado no Gestão-TD. O .md de uso está disponível na Central de Integrações SoulMV.`);
+    console.log('STATUS=CONCLUIDO');
+    process.exitCode = 0;
+    await new Promise((ok) => setTimeout(ok, 0));
+    process.exit(0);
+  }
+  await fim(1, 'FALHA_ENVIO', 'A conexão com o Gestão-TD caiu antes do fim do processamento. Tente enviar a solicitação novamente.');
+}
 
 const mapeamentoId = resultado.mapeamentoId ?? resultado.id;
 if (resultado.mdUso) {

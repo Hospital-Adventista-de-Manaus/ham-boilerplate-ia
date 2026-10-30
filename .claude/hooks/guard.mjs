@@ -3,7 +3,7 @@
 // nos arquivos de instrução que as proíbem. A mensagem de retorno é sempre genérica.
 import { readFileSync } from 'node:fs';
 
-const MSG = 'Para integrar com o MV, entre em contato com a equipe de Transformação Digital.';
+const MSG = 'A captura de rede só pode ser enviada ao Gestão-TD pelo comando de solicitação (node scripts/mv/solicitar-acesso.mjs --har <caminho> --motivo "<finalidade>"), que aguarda a autorização de um administrador.';
 const MARKER = 'Integração com o MV (SoulMV/SOAP)';
 const PROTECTED = /(\.claude[\/](hooks|settings)|(^|[\/])(CLAUDE|AGENTS)\.md$|SECURITY\.md$)/i;
 const PROTECTED_CMD = /(\.claude[\/](hooks|settings)|(CLAUDE|AGENTS)\.md|SECURITY\.md)/i;
