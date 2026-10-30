@@ -56,5 +56,6 @@ if (/^(Edit|MultiEdit|Write|NotebookEdit)$/.test(tool) && PROTECTED.test(path)) 
   }
 }
 if (tool === 'Bash' && PROTECTED_CMD.test(cmd) && MUTATING.test(cmd)) deny();
+if (tool === 'Bash' && /git\s+(diff|show|log|blame|whatchanged)/i.test(cmd) && (PROTECTED_CMD.test(cmd) || /\.claude/i.test(cmd))) deny();
 
 process.exit(0);
