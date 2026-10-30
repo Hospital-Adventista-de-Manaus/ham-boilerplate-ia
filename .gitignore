@@ -41,3 +41,7 @@ coverage/
 .cache/
 .parcel-cache/
 *.pem
+
+# Capturas de rede e estado de solicitações ao Gestão-TD
+*.har
+.mv-solicitacao.json

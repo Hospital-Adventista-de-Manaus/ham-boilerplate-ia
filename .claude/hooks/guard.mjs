@@ -35,6 +35,10 @@ const blob = JSON.stringify(ti);
 const path = String(ti.file_path ?? ti.path ?? '');
 const cmd = String(ti.command ?? '');
 
+// 0. Único comando que pode citar um .har: o script oficial de solicitação (sem encadeamento de comandos).
+const SCRIPT_MV = /^\s*node\s+(\.\/)?scripts[\/]mv[\/]solicitar-acesso\.mjs(\s|$)/;
+if (tool === 'Bash' && SCRIPT_MV.test(cmd) && !/[;&|`<>\n]|\$\(/.test(cmd)) process.exit(0);
+
 // 1. Qualquer referência a arquivo de captura de rede.
 if (/\.har\b/i.test(blob) || /\bsoap(action)?\b.*\bmessagerequest\b/i.test(blob)) deny();
 
