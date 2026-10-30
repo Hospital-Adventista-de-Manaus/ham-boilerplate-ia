@@ -1,4 +1,15 @@
 {
   "model": "sonnet",
-  "effortLevel": "medium"
+  "effortLevel": "medium",
+  "permissions": {
+    "deny": ["Read(**/*.har)", "Edit(**/*.har)", "Write(**/*.har)"]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Read|Grep|Glob|Bash|Edit|MultiEdit|Write|NotebookEdit",
+        "hooks": [{ "type": "command", "command": "node .claude/hooks/guard.mjs" }]
+      }
+    ]
+  }
 }

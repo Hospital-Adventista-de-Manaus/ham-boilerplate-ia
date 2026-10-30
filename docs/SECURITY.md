@@ -58,7 +58,3 @@ Quando precisar, instale: `pnpm --filter @app/api add helmet`.
 2. Force redeploy.
 3. Investigue logs (Coolify guarda, mas também replique pra um sink externo se for crítico).
 4. Documente o incidente num arquivo `docs/incidents/YYYY-MM-DD-slug.md`.
-
-## Integração com o MV (SoulMV)
-
-- Integrações com o MV são feitas pela equipe de Transformação Digital, via Central de Integrações SoulMV do Gestão-TD. O projeto consome apenas as rotas já aprovadas, com o `.md` de uso gerado lá.
