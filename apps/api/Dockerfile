@@ -58,6 +58,12 @@ COPY --from=prod-deps --chown=nestjs:nodejs /prod-deploy/node_modules ./node_mod
 COPY --from=builder --chown=nestjs:nodejs /repo/apps/api/dist ./dist
 COPY --from=builder --chown=nestjs:nodejs /repo/apps/api/package.json ./package.json
 
+# Build id da API (commit do deploy ou carimbo AAMMDD.HHMM), lido pelo
+# HealthController e mostrado no painel "Novidades" do web.
+ARG SOURCE_COMMIT=
+RUN echo "${SOURCE_COMMIT:-$(date -u +%y%m%d.%H%M)}" > ./BUILD_ID \
+    && chown nestjs:nodejs ./BUILD_ID
+
 USER nestjs
 EXPOSE 3001
 

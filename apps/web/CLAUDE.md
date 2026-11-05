@@ -58,8 +58,9 @@ Referência completa (paleta, componentes, telas de exemplo): `Design System HAM
 A versão do app e o aviso de "nova versão" vêm de `src/lib/changelog.ts` — sem CI, sem tag de git, sem `package.json`:
 
 - **A cada funcionalidade nova que valha comunicar ao usuário, adicione uma entrada no topo do array `CHANGELOG`** (`version`, `date`, `titulo`, `itens`). A primeira entrada do array define automaticamente `APP_VERSION`.
-- O badge `BuildBadge` (canto inferior **esquerdo** — o canto direito é do selo de verificação do gestão-td, não mexer) mostra `v{APP_VERSION}` e, se o usuário ainda não viu essa versão (comparado via `localStorage`, `src/lib/app-storage.ts`), exibe "Nova versão" e abre o modal "Novidades" com o changelog completo ao clicar.
+- O badge `BuildBadge` (canto inferior **esquerdo** — o canto direito é do selo de verificação do gestão-td, não mexer) mostra `v{APP_VERSION}` e, se o usuário ainda não viu essa versão (comparado via `localStorage`, `src/lib/app-storage.ts`), exibe "Nova versão" e abre o modal "Novidades" com o changelog completo e os builds (web/API) ao clicar.
 - Bump de versão é manual e semântico (ex.: `0.1.0` → `0.2.0` pra uma feature nova, `→ 1.0.0` pra primeira versão estável) — decida a convenção com o time do projeto, mas sempre no topo do array.
+- `AvisoNovaVersao` (em `layout.tsx`) consulta `GET /versao` a cada minuto e ao voltar pra aba; se o build respondido for diferente do embutido no bundle carregado (`src/lib/build-info.ts`, via `NEXT_PUBLIC_GIT_SHA`), mostra um cartão "Nova versão disponível" com **Recarregar**/**Depois**. Nunca recarrega sozinho. O build do web é gravado no `.env.production` pelo `Dockerfile` (`SOURCE_COMMIT` do Coolify ou carimbo `AAMMDD.HHMM`); o build da API vem do campo `build` do `GET /health`.
 
 ## Variáveis de ambiente (web)
 

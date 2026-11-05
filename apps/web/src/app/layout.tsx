@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import { EnvironmentBanner } from '@/components/EnvironmentBanner';
 import { BuildBadge } from '@/components/BuildBadge';
+import { AvisoNovaVersao } from '@/components/AvisoNovaVersao';
 
 const sans = Plus_Jakarta_Sans({
   subsets: ['latin'],
@@ -46,6 +47,7 @@ export default function RootLayout({
         <EnvironmentBanner />
         {children}
         <BuildBadge />
+        <AvisoNovaVersao />
         {process.env.NODE_ENV !== 'production' && (
           <script
             async

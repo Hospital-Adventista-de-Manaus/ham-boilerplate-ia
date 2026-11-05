@@ -3,6 +3,8 @@ export interface HealthCheck {
   uptime: number;
   timestamp: string;
   version?: string;
+  /** Id do build da API (commit do deploy ou carimbo AAMMDD.HHMM). */
+  build?: string;
 }
 
 export interface ApiError {
@@ -12,3 +14,4 @@ export interface ApiError {
 }
 
 export * from './hello';
+export * from './versao';

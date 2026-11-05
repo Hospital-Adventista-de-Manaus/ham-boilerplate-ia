@@ -31,6 +31,15 @@ FROM base AS builder
 COPY --from=deps /repo /repo
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Build id do WEB para o selo e o aviso de nova versão: SOURCE_COMMIT (o
+# Coolify injeta em builds git) ou um carimbo AAMMDD.HHMM, que muda a cada
+# deploy. Gravado no .env.production para o Next embutir no build.
+# (Não usar `ENV ...=$SOURCE_COMMIT`: valor vazio sobrescreveria o arquivo.)
+ARG SOURCE_COMMIT=
+RUN BUILD_ID="${SOURCE_COMMIT:-$(date -u +%y%m%d.%H%M)}" \
+    && echo "NEXT_PUBLIC_GIT_SHA=$BUILD_ID" >> apps/web/.env.production
+
 RUN pnpm --filter @app/web build
 
 # ───────────────────────────────────────────────

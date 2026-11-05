@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { usePathname } from 'next/navigation';
+import type { HealthCheck } from '@app/shared-types';
 import { Icon } from '@/components/Icon';
 import { Modal } from '@/components/ui/Modal';
+import { BUILD_SHA } from '@/lib/build-info';
 import { APP_VERSION, CHANGELOG } from '@/lib/changelog';
 import { getAppStorage, setAppStorage } from '@/lib/app-storage';
 
@@ -16,10 +18,18 @@ export function BuildBadge() {
   const pathname = usePathname();
   const [aberto, setAberto] = useState(false);
   const [temNovidade, setTemNovidade] = useState(false);
+  const [apiBuild, setApiBuild] = useState<string | null>(null);
 
   useEffect(() => {
     setTemNovidade(getAppStorage(VERSAO_VISTA_KEY) !== APP_VERSION);
   }, []);
+
+  useEffect(() => {
+    if (!aberto || apiBuild !== null) return;
+    obterHealth()
+      .then((h) => setApiBuild(h.build || h.version || '—'))
+      .catch(() => setApiBuild('indisponível'));
+  }, [aberto, apiBuild]);
 
   if (ROTAS_SEM_BADGE.includes(pathname)) return null;
 
@@ -46,6 +56,9 @@ export function BuildBadge() {
       </button>
 
       <Modal open={aberto} onClose={() => setAberto(false)} title="Novidades">
+        <p className="-mt-2 font-mono text-xs text-muted">
+          build web: {BUILD_SHA || 'dev'} · build API: {apiBuild ?? '…'}
+        </p>
         {CHANGELOG.map((rel, i) => (
           <section key={rel.version} className="space-y-2">
             <div className="flex items-baseline gap-2">
@@ -68,4 +81,11 @@ export function BuildBadge() {
       </Modal>
     </>
   );
+}
+
+/** Build da API (campo `build` do GET /health), mostrado no painel. */
+async function obterHealth(): Promise<HealthCheck> {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'}/health`, { cache: 'no-store' });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  return (await res.json()) as HealthCheck;
 }
